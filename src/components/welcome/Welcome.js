@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import welcomeImg from '../../img/welcomeWall.jpg';
 import './welcome.scss';
+import logo from '../../img/logo.png';
 import {
   signInWithEmailAndPassword,
   onAuthStateChanged,
@@ -8,11 +8,14 @@ import {
 } from 'firebase/auth';
 import { auth } from '../../firebase';
 import { useNavigate } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faUser, faEye, faEyeSlash } from '@fortawesome/free-regular-svg-icons';
 
 const Welcome = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isRegistering, setIsRegistering] = useState(false);
+  const [isHidden, setIsHidden] = useState(true);
   const [registerInformation, setRegisterInformation] = useState({
     email: '',
     confirmEmail: '',
@@ -69,18 +72,18 @@ const Welcome = () => {
   return (
     <>
       <div className="welcome-wrap">
-        <div className="container-fluid p-0 h-100 d-flex justify-content-between">
-          <div className="h-100">
-            <h1>Do it today</h1>
-            <h2>Welcome back, please enter your details.</h2>
+        <div className="container-fluid p-0 h-100 d-flex justify-content-between align-items-center">
+          <div className="welcome-login-container">
+            <img src={logo} alt="logo" className="logo" />
+
             <form>
               {!isRegistering ? (
                 <>
+                  <h2>Welcome back, please enter your details.</h2>
                   <div className="form-group">
-                    <label htmlFor="email" className="d-block">
-                      Email address
-                    </label>
+                    <label htmlFor="email">Email address</label>
                     <input
+                      className="w-100"
                       type="email"
                       id="email"
                       onChange={updateEmailValue}
@@ -88,23 +91,27 @@ const Welcome = () => {
                       placeholder="Email"
                       required
                     />
+                    <FontAwesomeIcon icon={faUser} />
                   </div>
                   <div className="form-group">
-                    <label htmlFor="password" className="d-block">
-                      Password
-                    </label>
+                    <label htmlFor="password">Password</label>
                     <input
-                      type="password"
+                      className="w-100"
+                      type={isHidden ? 'password' : 'text'}
                       id="password"
                       onChange={updatePassValue}
                       value={password}
                       required
                       placeholder="Password"
                     />
+                    <FontAwesomeIcon
+                      icon={isHidden ? faEye : faEyeSlash}
+                      onClick={() => setIsHidden(!isHidden)}
+                    />
                   </div>
                   <button
                     type="button"
-                    className="btn btn-primary d-block"
+                    className="signin-btn d-block w-100"
                     onClick={handleSignIn}
                   >
                     Sign In
@@ -112,15 +119,17 @@ const Welcome = () => {
                   <button
                     to="/createaccount"
                     type="button"
-                    className="btn btn-primary"
+                    className="createAcc-btn"
                     onClick={() => setIsRegistering(true)}
                   >
-                    Create a new account
+                    <span>Don't have an account? </span>Sign up for free!
                   </button>
                 </>
               ) : (
                 <>
+                  <h2>Let's get started!</h2>
                   <input
+                    className="w-100"
                     type="text"
                     required
                     placeholder="Email"
@@ -133,6 +142,7 @@ const Welcome = () => {
                     }
                   />
                   <input
+                    className="w-100"
                     type="email"
                     required
                     placeholder="Confirm Email"
@@ -145,6 +155,7 @@ const Welcome = () => {
                     }
                   />
                   <input
+                    className="w-100"
                     type="password"
                     required
                     placeholder="Password"
@@ -157,6 +168,7 @@ const Welcome = () => {
                     }
                   />
                   <input
+                    className="w-100"
                     type="password"
                     required
                     placeholder="Confirm Password"
@@ -168,23 +180,23 @@ const Welcome = () => {
                       })
                     }
                   />
-                  <button type="button" onClick={() => handleSignUp()}>
+                  <button
+                    type="button"
+                    className="signin-btn w-100"
+                    onClick={() => handleSignUp()}
+                  >
                     Sign up
                   </button>
-                  <button type="button" onClick={() => setIsRegistering(false)}>
-                    Go Back
+                  <button
+                    type="button"
+                    className="goBack-btn"
+                    onClick={() => setIsRegistering(false)}
+                  >
+                    Go Back to Login page
                   </button>
                 </>
               )}
             </form>
-          </div>
-          <div className="h-100 welcomeImg-wrap">
-            <img
-              src={welcomeImg}
-              className="welcomeImg"
-              width="100%"
-              height="100%"
-            />
           </div>
         </div>
       </div>
