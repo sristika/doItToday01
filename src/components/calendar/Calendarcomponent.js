@@ -38,6 +38,16 @@ const Calendarcomponent = () => {
             endTime: '11:30:00',
             color: 'red',
           },
+          {
+            title: 'my recurring event rrule',
+            rrule: {
+              freq: 'monthly',
+              interval: 1,
+              bymonthday: [1, 15],
+              dtstart: '2022-09-01T10:30:00', // will also accept '20120201T103000'
+              until: '2022-10-30', // will also accept '20120201'
+            },
+          },
           { title: 'event 1', date: '2022-08-19' },
           { title: 'event 2', date: '2022-08-16' },
         ]}

@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from 'react';
+import './homepage.scss';
 import { auth, db } from '../../firebase';
 import { signOut, onAuthStateChanged } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
 import { uid } from 'uid';
 import { set, ref, onValue, remove } from 'firebase/database';
+import AddTask from '../addTask/AddTask';
 
 const Homepage = () => {
   const navigate = useNavigate();
-  const [todo, setTodo] = useState('');
   const [todos, setTodos] = useState([]);
+  const [modalState, setModalState] = useState(false);
 
   useEffect(() => {
     auth.onAuthStateChanged((user) => {
@@ -36,39 +38,51 @@ const Homepage = () => {
       .catch((err) => alert(err.message));
   };
 
-  const writeTodoToDb = () => {
-    const uidd = uid();
-    set(ref(db, `/${auth.currentUser.uid}/${uidd}`), {
-      todo: todo,
-      uid: uidd,
-    });
-
-    setTodo('');
-  };
-
   const handleDelete = (uid) => {
     remove(ref(db, `/${auth.currentUser.uid}/${uid}`));
   };
 
   return (
     <>
-      <input
-        type="text"
-        placeholder="Add new todo"
-        onChange={(e) => setTodo(e.target.value)}
-        value={todo}
-      />
+      <button
+        type="button"
+        onClick={() => setModalState(true)}
+        data-toggle="modal"
+        data-target="#myModal"
+      >
+        Create a task
+      </button>
+      {modalState ? (
+        <div className="modal fade" id="myModal" role="dialog">
+          <div className="modal-dialog">
+            <div className="modal-content">
+              <div className="modal-header">
+                <button
+                  type="button"
+                  className="close"
+                  onClick={() => setModalState(false)}
+                  data-dismiss="modal"
+                >
+                  &times;
+                </button>
+              </div>
+              <div className="modal-body">
+                <AddTask />
+              </div>
+            </div>
+          </div>
+        </div>
+      ) : (
+        ''
+      )}
       {todos.map((todo) => (
-        <div>
+        <div key={todo.uid}>
           <h1>{todo.todo}</h1>
           <button type="button" onClick={() => handleDelete(todo.uid)}>
             Delete entry
           </button>
         </div>
       ))}
-      <button type="button" onClick={writeTodoToDb}>
-        Add
-      </button>
       <button type="button" onClick={handleSignOut}>
         Sign Out
       </button>
