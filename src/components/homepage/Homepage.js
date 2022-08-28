@@ -76,9 +76,9 @@ const Homepage = () => {
         ''
       )}
       {todos.map((todo) => (
-        <div key={todo.uid}>
-          <h1>{todo.todo}</h1>
-          <button type="button" onClick={() => handleDelete(todo.uid)}>
+        <div key={todo.id}>
+          <h1>{todo.title}</h1>
+          <button type="button" onClick={() => handleDelete(todo.id)}>
             Delete entry
           </button>
         </div>
